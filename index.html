@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>21-Diner Sietse</title>
+<style>
+body{
+    font-family: Georgia, serif;
+    background:#111;
+    color:#f5f5f5;
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.card{
+    width:min(900px,92%);
+    background:#1b1b1b;
+    border:2px solid #c9a227;
+    border-radius:16px;
+    padding:30px;
+    box-shadow:0 0 25px rgba(201,162,39,.25);
+}
+h1{color:#c9a227;text-align:center;}
+input,button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px;
+    border:none;
+}
+button{
+    background:#c9a227;
+    cursor:pointer;
+    font-weight:bold;
+}
+.hidden{display:none;}
+.question{white-space:pre-wrap; line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>21-Diner Sietse</h1>
+
+<div id="codeSection">
+<p>Voer je persoonlijke code in:</p>
+<input id="codeInput" placeholder="Bijvoorbeeld JOC742">
+<button onclick="checkCode()">Verder</button>
+</div>
+
+<div id="questionSection" class="hidden">
+<h2 id="hello"></h2>
+<p>
+Deze uitnodiging bevat informatie die alleen voor jou bedoeld is.<br><br>
+Om te controleren dat de brief daadwerkelijk door de juiste persoon is geopend,
+vragen we je eerst onderstaande vraag te beantwoorden.<br><br>
+Zodra je het juiste antwoord hebt gegeven, wordt de uitnodiging zichtbaar.
+</p>
+
+<div class="question" id="questionText"></div>
+
+<input id="answerInput" placeholder="Jouw antwoord">
+<button onclick="checkAnswer()">Controleer antwoord</button>
+
+<p id="message"></p>
+</div>
+
+<div id="inviteSection" class="hidden">
+<h2>🎉 Correct!</h2>
+<p>
+Gefeliciteerd, je hebt bewezen dat jij daadwerkelijk de bedoelde ontvanger bent.
+Hierbij ben je officieel uitgenodigd voor mijn 21-diner.
+</p>
+
+<h2>21-Diner Sietse</h2>
+
+<p><strong>📅 Datum</strong><br>20 januari 2027</p>
+<p><strong>📍 Locatie</strong><br>De Korf, Leusden</p>
+<p><strong>🕠 Aanvang diner</strong><br>17:30</p>
+<p><strong>📱 WhatsAppgroep</strong><br>Volgt later</p>
+</div>
+</div>
+
+<script>
+const gasten = {
+"JOC742": {naam:"Jochem", antwoord:"Simon", vraag:`Wij hebben bij verschillende bedrijven gewerkt, waaronder het magazijn in Hoevelaken. Hoe heette de Pool waarmee we hebben gewerkt bij Mindray?`},
+"SEB381": {naam:"Sebastiaan", antwoord:"Lamp", vraag:`Tijdens het etentje bij Heinde besloot jij om een nigiri te verstoppen bij onze tafel. Waarop heeft dit stukje rijst met vis de daaropvolgende maand gelegen?`},
+"NAT915": {naam:"Nathan", antwoord:"Patatje", vraag:`Tijdens de coronatijd heb ik mijn verjaardag gevierd samen met jou en Jor. Naast een geldbedrag kreeg ik een 2e cadeau van jou op deze verjaardag. Welk triest 2e cadeau heb je mij gegeven op mijn 15e verjaardag?`},
+"GEE264": {naam:"Geerten", antwoord:"Thijs", vraag:`Op de minecraft eilandenserver is veel fittie geweest. Mensen werden bedreigt, rechtszaken werden gestart en iemand besloot creative te gebruiken. Voor wie werd de quotemuur gebouwd op deze server?`},
+"GIJ843": {naam:"Gijs", antwoord:"Spek", vraag:`Op de middelbare waren wij de dikzakken. Wat was het thema van de cadeaus die je op je 18e verjaardag kreeg?`},
+"STA192": {naam:"Stan", antwoord:"Zwemmen", vraag:`In de 5e klas hebben wij samen deelgenomen aan een examensport. Welke sport was dit?`},
+"JOR111": {naam:"Jor", antwoord:"Kip", vraag:`Welke diersoort sneuvelde in de machine in de rukbunker waardoor er telkens een bel afging?`},
+"CAS507": {naam:"Casper", antwoord:"Hamburger", vraag:`Welke vorm van etenswaar hadden de sloffen die wij droegen op het samensmeltingsweekend?`},
+"FRE338": {naam:"Frédèrique", antwoord:"Wodka", vraag:`Op jouw 18e verjaardag heb ik voor het eerst een shot genomen van welke drank?`},
+"DAP611": {naam:"Daniel P", antwoord:"Dennenappel", vraag:`Welk bos-item heb ik een keer op jouw achterhoofd gesmeten bij de welpen?`},
+"JAS780": {naam:"Jasper", antwoord:"Marieke", vraag:`Van wie leende jij de eyeliner tijdens de make-up tutorial in het busje?`},
+"DAS425": {naam:"Daniel S", antwoord:"Hondenpoep", vraag:`Wat zat er op je broek tijdens het Sherrow-weekend?`},
+"JEL974": {naam:"Jelmer", antwoord:"Heineken", vraag:`Welk biermerk was de any-timer op de boot naar Calais?`},
+"MEN216": {naam:"Mena", antwoord:"Servies", vraag:`Welke taal spreken ze ook alweer in de vaatwasser?`},
+"SUZ688": {naam:"Suzanne", antwoord:"Brooklyn", vraag:`Welke stadsdeel stond op het meegenomen bierglas?`},
+"ARO459": {naam:"Aron", antwoord:"Rowan", vraag:`Welke bever zei: "Weet ik veel, ik kan niet lezen!"?`},
+"ELI803": {naam:"Eline", antwoord:"Zuid-Korea", vraag:`Welk vakantieland vertegenwoordigde ik op jouw 21e verjaardag?`},
+"KAS147": {naam:"Kasper", antwoord:"Drie", vraag:`Hoeveel kilo worst zat in het blik uit Hamburg? (getal uitschrijven)`},
+"JOR592": {naam:"Jorit", antwoord:"Vijf", vraag:`Met hoeveel stonden we op de brug tijdens de letsgo-excursie? (getal uitschrijven)`},
+"WOU731": {naam:"Wout", antwoord:"Jorit", vraag:`Wie zat er achterin de boomstam in Walibi?`}
+};
+
+let huidigeGast = null;
+
+function normaliseer(t){
+ return t.toLowerCase().trim().replace(/-/g," ").replace(/\s+/g," ");
+}
+
+function checkCode(){
+ const code=document.getElementById("codeInput").value.trim().toUpperCase();
+ if(!gasten[code]){
+   alert("Onbekende code.");
+   return;
+ }
+ huidigeGast=gasten[code];
+ document.getElementById("codeSection").classList.add("hidden");
+ document.getElementById("questionSection").classList.remove("hidden");
+ document.getElementById("hello").innerText="Hallo " + huidigeGast.naam + ",";
+ document.getElementById("questionText").innerText=huidigeGast.vraag;
+}
+
+function checkAnswer(){
+ const gegeven=normaliseer(document.getElementById("answerInput").value);
+ const juist=normaliseer(huidigeGast.antwoord);
+
+ if(gegeven===juist){
+   document.getElementById("questionSection").classList.add("hidden");
+   document.getElementById("inviteSection").classList.remove("hidden");
+ }else{
+   document.getElementById("message").innerText="Dat antwoord klopt helaas niet. Probeer het opnieuw.";
+ }
+}
+</script>
+</body>
+</html>
